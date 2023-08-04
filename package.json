@@ -1,0 +1,27 @@
+{
+  "name": "emp",
+  "version": "1.0.0",
+  "description": "Emp app using MongoDb",
+  "main": "Emp.js",
+  "scripts": {
+    "start": "nodemon Emp.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.3.0",
+    "express": "^4.18.2",
+    "jsdom": "^22.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.7.0",
+    "nodemon": "^2.0.22",
+    "parse5": "^7.1.2",
+    "playwright": "^1.36.2",
+    "puppeteer": "^21.0.1"
+  }
+}

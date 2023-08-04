@@ -1,0 +1,33 @@
+{
+  "Introduction to Express": [],
+  "What is Express?": [
+    "Express is a small framework that sits on top of Node.js’s web server functionality to simplify its APIs and add helpful new features.It makes it easier to organize your application’s functionality with middle ware and routing; it adds helpful utilities to Node.js’s HTTP objects;it facilitates the rendering of dynamic HTTP objects.",
+    "",
+    "Express is a part of MEAN stack, a full stack JavaScript solution used in building fast, robust, and maintainable production web applications.",
+    "MongoDB(Database)",
+    "",
+    "",
+    "ExpressJS(Web Framework)",
+    "AngularJS(Front-end Framework)",
+    "NodeJS(Application Server)",
+    ""
+  ],
+  "Installing Express on Windows (WINDOWS 10)": [
+    "Assuming that you have installed node.js on your system, the following steps should be followed to install express on your Windows:",
+    "STEP-1: Creating a directory for our project and make that our working directory.",
+    "$ mkdir gfg\n$ cd gfg \n",
+    "STEP-2: Using npm init command to create a package.json file for our project.",
+    "$ npm init\n",
+    "This command describes all the dependencies of our project. The file will be updated when adding further dependencies during the development process, for example when you set up your build system.",
+    "Keep pressing enter and enter “yes/no” accordingly at the terminus line.STEP-3: Installing Express",
+    "Now in your gfg(name of your folder) folder type the following command line:",
+    "",
+    "$ npm install express --save\n",
+    "",
+    "NOTE- Here “WARN” indicates the fields that must be entered in STEP-2.",
+    "STEP-4: Verify that Express.js was installed on your Windows:",
+    "To check that express.js was installed on your system or not, you can run the following command line on cmd:",
+    "C:\\Users\\Admin\\gfg\\node_modules>npm --version express\n",
+    "The version of express.js will be displayed on successful installation."
+  ]
+}
