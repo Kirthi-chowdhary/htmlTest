@@ -1,25 +1,14 @@
-const { chromium } = require('playwright');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const port = process.env.PORT || 3000;
 
-(async () => {
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
-  const page = await context.newPage();
+app.use(cors());
+app.use(express.json());
 
-  // Replace 'http://example.com' with the URL of the HTML page you want to convert
-  await page.goto('https://www.geeksforgeeks.org/introduction-to-express/');
+const apirouter = require('./Routes/HTMLPDFConveter');
+app.use('/api', apirouter);
 
-  // Adjust the dimensions of the PDF page if needed
-  const pdf = await page.pdf({
-    path: 'result2.pdf', // Change the output file name and path as desired
-    format: 'A4',      // Page format, e.g., 'A4', 'Letter', etc.
-    margin: {
-      top: '20px',
-      bottom: '20px',
-      left: '20px',
-      right: '20px',
-    },
-    landscape: true
-  });
-
-  await browser.close();
-})();
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});

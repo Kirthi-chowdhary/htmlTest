@@ -4,3 +4,7 @@ Test.xlsx
 output.pdf
 result1.pdf
 result2.pdf
+.env
+MongoDB.pdf
+output.pdf
+MongoDBBasics.pdf
