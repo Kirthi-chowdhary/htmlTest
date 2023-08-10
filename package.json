@@ -4,7 +4,7 @@
   "description": "Emp app using MongoDb",
   "main": "Emp.js",
   "scripts": {
-    "start": "nodemon Emp.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
