@@ -1,7 +1,7 @@
 const express = require('express');
 const cheerio = require('cheerio');
 const axios = require('axios');
-const striptags = require('striptags');
+//const striptags = require('striptags');
 
 const app = express();
 const port = 3000;
@@ -28,11 +28,11 @@ app.get('/get-body-content', async (req, res) => {
         const $ = cheerio.load(htmlData);
 
         $('script').remove();
-        const bodyContent = $('body').html();
-        const plainTextContent = striptags(bodyContent);
+        const bodyContent = $('body').text();
+        //const plainTextContent = striptags(bodyContent);
 
         // Divide the plain text into chunks of 1500 words
-        const chunkedText = splitTextIntoChunks(plainTextContent, 1500);
+        const chunkedText = splitTextIntoChunks(bodyContent, 1500);
 
         res.json({ chunks: chunkedText });
     } catch (error) {
