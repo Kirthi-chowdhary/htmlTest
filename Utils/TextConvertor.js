@@ -13,10 +13,29 @@ exports.Text = async(url) =>{
         $('script').remove();
         const bodyContent = $('body').text();
 
+        //spliting the words
+        const words = bodyContent.split(' ');
+
         // Divide the plain text into chunks of 1500 words
+        const chunkSize = 1500;
+        const overlapSize = 300; // Adjust as needed
         const chunks = [];
-        for (let i = 0; i < bodyContent.length; i += 1500) {
-            chunks.push(bodyContent.slice(i, i + 1500));
+        let currentChunk = '';
+
+        for (const word of words) {
+            const newChunkLength = (currentChunk + word + ' ').length;
+
+            if (newChunkLength <= chunkSize) {
+                currentChunk += word + ' ';
+            } else {
+                const overlapPart = currentChunk.slice(-overlapSize).trim();
+                chunks.push(currentChunk.trim());
+                currentChunk = overlapPart + ' ' + word + ' ';
+            }
+        }
+
+        if (currentChunk.trim() !== '') {
+            chunks.push(currentChunk.trim());
         }
         
        return chunks;
