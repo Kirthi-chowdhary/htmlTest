@@ -1,32 +1,45 @@
-const officegen = require('officegen');
+const express = require('express');
+const mammoth = require('mammoth');
 const fs = require('fs');
+const PDFDocument = require('pdfkit');
+const fileUpload = require('express-fileupload');
+const path = require('path'); // Add this line to use the path module
 
-function convertDocxToPdf(inputDocxPath, outputPdfPath) {
-  const docx = officegen('docx');
+const app = express();
+const port = 3000;
 
-  // Read the DOCX file
-  const inputStream = fs.createReadStream(inputDocxPath);
+app.use(express.json());
+app.use(fileUpload());
 
-  // Create a write stream for the PDF file
-  const pdfStream = fs.createWriteStream(outputPdfPath);
+app.post('/convert', async (req, res) => {
+  try {
+    if (!req.files || !req.files.docxContent) {
+      return res.status(400).send('No file uploaded.');
+    }
 
-  // Pipe the input DOCX stream to the docx object
-  inputStream.pipe(docx);
+    const docxFile = req.files.docxContent;
+    const docxContentBuffer = docxFile.data;
 
-  // Pipe the output of the docx object to the PDF stream
-  docx.generate(pdfStream);
+    // Convert .docx to HTML using Mammoth
+    const { value: html } = await mammoth.convertToHtml({ buffer: docxContentBuffer });
 
-  pdfStream.on('finish', () => {
-    console.log(`Conversion completed. PDF saved to ${outputPdfPath}`);
-  });
+    // Create a PDF document
+    const doc = new PDFDocument();
+    const pdfPath = path.resolve(__dirname, 'converted.pdf'); // Resolve the absolute path
 
-  pdfStream.on('error', (error) => {
-    console.error('Error:', error);
-  });
-}
+    // Pipe the HTML content to the PDF
+    doc.pipe(fs.createWriteStream(pdfPath));
+    doc.text(html);
 
-// Usage
-const inputDocxPath = 'JEST DOCUMENTATION.docx'; // Replace with your DOCX file path
-const outputPdfPath = 'output.pdf'; // Replace with your desired PDF output path
+    // End the PDF stream and respond with the PDF file
+    doc.end();
+    res.sendFile(pdfPath);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Conversion failed.');
+  }
+});
 
-convertDocxToPdf(inputDocxPath, outputPdfPath);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
