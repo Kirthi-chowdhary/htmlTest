@@ -22,6 +22,7 @@ app.post('/convert', async (req, res) => {
 
     // Convert .docx to HTML using Mammoth
     const { value: html } = await mammoth.convertToHtml({ buffer: docxContentBuffer });
+    const plainText = html.replace(/<\/?[^>]+(>|$)/g, "");
 
     // Create a PDF document
     const doc = new PDFDocument();
@@ -29,7 +30,7 @@ app.post('/convert', async (req, res) => {
 
     // Pipe the HTML content to the PDF
     doc.pipe(fs.createWriteStream(pdfPath));
-    doc.text(html);
+    doc.text(plainText);
 
     // End the PDF stream and respond with the PDF file
     doc.end();
