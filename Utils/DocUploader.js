@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const mammoth = require('mammoth');
 const officegen = require('officegen');
 const fs = require('fs');
@@ -24,21 +25,31 @@ exports.Doc = async (doc) => {
 
     const generatedFiles = []; // Array to store generated file paths
 
-    parts.forEach((partText, index) => {
+    const promises = parts.map(async (templatechunk, i) => {
+      
+      let fileId = uuidv4();
+      console.log(fileId)
       const docx = officegen('docx');
-
       const pObj = docx.createP();
-      pObj.addText(`Part ${index + 1}`, { bold: true });
-
+      
+      pObj.addText(`Part ${i + 1}`, { bold: true })
       const contentP = docx.createP();
-      contentP.addText(partText);
-
-      const outputFilePath = path.join(outputPath, `part_${index + 1}.docx`);
+      contentP.addText(templatechunk);
+      const outputFilePath = path.join(outputPath, `${fileId}.docx`);
       const outputStream = fs.createWriteStream(outputFilePath);
       docx.generate(outputStream);
 
       generatedFiles.push(outputFilePath); // Store the generated file path
+      
+      
     });
+    try {
+      console.log("Generated files:", generatedFiles);
+      const responses = await Promise.all(promises);await Promise.all(promises);
+      
+    } catch (error) {
+      // res.status(500).json({ message: error });
+    }
 
     // Return the array of generated file paths
     return generatedFiles;
