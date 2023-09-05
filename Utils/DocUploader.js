@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const mammoth = require('mammoth');
-const officegen = require('officegen');
 const fs = require('fs');
-const path = require('path'); // Import the path module
+const path = require('path');
+const PDFDocument = require('pdfkit'); // Import the pdfkit library
 
 exports.Doc = async (doc) => {
   if (!doc) {
@@ -26,32 +26,31 @@ exports.Doc = async (doc) => {
     const generatedFiles = []; // Array to store generated file paths
 
     const promises = parts.map(async (templatechunk, i) => {
-      
       let fileId = uuidv4();
-      console.log(fileId)
-      const docx = officegen('docx');
-      const pObj = docx.createP();
-      
-      pObj.addText(`Part ${i + 1}`, { bold: true })
-      const contentP = docx.createP();
-      contentP.addText(templatechunk);
-      const outputFilePath = path.join(outputPath, `${fileId}.docx`);
+      console.log(fileId);
+
+      const pdfDoc = new PDFDocument();
+      const outputFilePath = path.join(outputPath, `${fileId}.pdf`);
       const outputStream = fs.createWriteStream(outputFilePath);
-      docx.generate(outputStream);
+
+      pdfDoc.pipe(outputStream); // Pipe output to the output stream
+
+      pdfDoc.fontSize(12).text(`Part ${i + 1}`, { bold: true });
+      pdfDoc.fontSize(12).text(templatechunk);
+
+      pdfDoc.end(); // End the document
 
       generatedFiles.push(outputFilePath); // Store the generated file path
-      
-      
     });
+
     try {
       console.log("Generated files:", generatedFiles);
-      const responses = await Promise.all(promises);await Promise.all(promises);
-      
+      await Promise.all(promises);
     } catch (error) {
-      // res.status(500).json({ message: error });
+      // Handle errors
     }
 
-    // Return the array of generated file paths
+    // Return an array of generated file paths
     return generatedFiles;
   } catch (error) {
     throw error;
